@@ -3,4 +3,7 @@ django
 langgraph
 django-browser-reload
 django-allauth[socialaccount]
+python-dotenv
 pillow
+django-widget-tweaks
+psycopg[binary,pool]
