@@ -1,3 +1,6 @@
 ruff
 django
 langgraph
+django-browser-reload
+django-allauth[socialaccount]
+pillow
