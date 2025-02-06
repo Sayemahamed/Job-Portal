@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+
 import os
 from pathlib import Path
 
@@ -94,13 +95,13 @@ TEMPLATES = [
 # DATABASES
 # ------------------------------------------------------------------------------
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # Using PostgreSQL as the database backend.
-        'NAME': 'postgres',                         # Name of the database to connect to.
-        'USER': 'postgres',                         # Username for authentication.
-        'PASSWORD': 'postgres',                     # Password for authentication.
-        'HOST': 'localhost',                        # Host where the database is running.
-        'PORT': '5432',                             # Default port for PostgreSQL.
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",  # Using PostgreSQL as the database backend.
+        "NAME": "postgres",  # Name of the database to connect to.
+        "USER": "postgres",  # Username for authentication.
+        "PASSWORD": "postgres",  # Password for authentication.
+        "HOST": "localhost",  # Host where the database is running.
+        "PORT": "5432",  # Default port for PostgreSQL.
     }
 }
 

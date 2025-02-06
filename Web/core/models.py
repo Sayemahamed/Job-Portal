@@ -6,17 +6,18 @@ import os
 
 # Create your models here.
 
+
 class Profile(models.Model):
     GENDER_CHOICES = [
-        ('M', 'Male'),
-        ('F', 'Female'),
-        ('O', 'Other'),
-        ('N', 'Prefer not to say')
+        ("M", "Male"),
+        ("F", "Female"),
+        ("O", "Other"),
+        ("N", "Prefer not to say"),
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='N')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="N")
     location = models.CharField(max_length=100, blank=True)
     phone_number = models.CharField(max_length=15, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -36,18 +37,20 @@ class Profile(models.Model):
                         os.remove(old_profile.avatar.path)
             except Profile.DoesNotExist:
                 pass
-        
+
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = 'Profile'
-        verbose_name_plural = 'Profiles'
+        verbose_name = "Profile"
+        verbose_name_plural = "Profiles"
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     """Create a Profile instance whenever a new User is created."""
     if created:
         Profile.objects.create(user=instance)
+
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):

@@ -4,27 +4,35 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0001_initial'),
+        ("core", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='profile',
-            name='bio',
+            model_name="profile",
+            name="bio",
         ),
         migrations.RemoveField(
-            model_name='profile',
-            name='birth_date',
+            model_name="profile",
+            name="birth_date",
         ),
         migrations.RemoveField(
-            model_name='profile',
-            name='website',
+            model_name="profile",
+            name="website",
         ),
         migrations.AddField(
-            model_name='profile',
-            name='gender',
-            field=models.CharField(choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other'), ('N', 'Prefer not to say')], default='N', max_length=1),
+            model_name="profile",
+            name="gender",
+            field=models.CharField(
+                choices=[
+                    ("M", "Male"),
+                    ("F", "Female"),
+                    ("O", "Other"),
+                    ("N", "Prefer not to say"),
+                ],
+                default="N",
+                max_length=1,
+            ),
         ),
     ]
