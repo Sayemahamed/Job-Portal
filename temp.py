@@ -270,9 +270,6 @@ class Notification(models.Model):
     sent_date = models.DateTimeField(auto_now_add=True)
     read_status = models.BooleanField(default=False)
     # Optional related fields for context
-    related_job = models.ForeignKey(
-        JobPosting, on_delete=models.SET_NULL, null=True, blank=True
-    )
     related_resource = models.ForeignKey(
         CareerResource, on_delete=models.SET_NULL, null=True, blank=True
     )
