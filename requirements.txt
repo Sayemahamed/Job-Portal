@@ -9,3 +9,5 @@ pillow
 django-widget-tweaks
 psycopg[binary,pool]
 playwright
+redis
+celery

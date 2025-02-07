@@ -11,7 +11,7 @@ def get_job_description(job_id: str) -> str:
         page.goto(url=url,timeout=15000)        
         page.wait_for_selector(selector='#job-details', timeout=15000)
         job_id_element = page.query_selector(selector='#job-details')
-        details: str|None=job_id_element.text_content()
+        details: str|None=job_id_element.text_content().strip()# type: ignore
         return details if details else "No description found"
         
 

@@ -124,6 +124,14 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
+# Celery
+# ------------------------------------------------------------------------------
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_TIMEZONE = "Australia/Tasmania"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
 # ALLAUTH SETTINGS
 # ------------------------------------------------------------------------------
 ACCOUNT_LOGIN_METHODS = {"email"}
