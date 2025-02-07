@@ -20,4 +20,5 @@ def get_job_ids(job_type: str,job_count: int) -> list[str]:
         return job_ids
 
 # Example usage
-print(get_job_ids(job_type="sales",job_count=50))
+if __name__ == "__main__":
+    print(get_job_ids(job_type="sales",job_count=50))
