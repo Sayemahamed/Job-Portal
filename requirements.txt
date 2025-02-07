@@ -1,4 +1,5 @@
 ruff
+rich
 django
 langgraph
 django-browser-reload
