@@ -2,6 +2,8 @@ from rich import print
 from playwright.sync_api import sync_playwright
 from playwright.sync_api._generated import Browser, Page
 from html_to_markdown import convert_to_markdown
+import re
+
 
 def get_job_description(job_id: str) -> str:
     with sync_playwright() as p:
@@ -10,10 +12,14 @@ def get_job_description(job_id: str) -> str:
         )
         url: str = f"https://www.linkedin.com/jobs/view/{job_id}"
         page: Page = browser.contexts[0].pages[2]
-        page.goto(url=url, timeout=15000)
+        page.goto(url=url, timeout=20000)
         page.wait_for_selector(selector="#job-details", timeout=15000)
         job_id_element = page.query_selector(selector="#job-details")
-        details: str | None = ' '.join(convert_to_markdown( job_id_element.inner_html()).split()) # type: ignore
+        details: str | None = convert_to_markdown(
+            "<div>" + job_id_element.inner_html() + "</div>"# type: ignore
+        )  
+        details = re.sub(r" +", " ", details)
+        details = re.sub(r"\n+", "\n", details)
         return details if details else "No description found"
 
 
