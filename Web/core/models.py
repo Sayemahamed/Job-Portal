@@ -112,6 +112,7 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
+
 class Notification(models.Model):
     NOTIFICATION_TYPE_CHOICES = [
         ("Job Alert", "Job Alert"),
@@ -127,5 +128,6 @@ class Notification(models.Model):
     content = models.TextField()
     sent_date = models.DateTimeField(auto_now_add=True)
     read_status = models.BooleanField(default=False)
+
     def __str__(self):
         return f"Notification for {self.user.email}: {self.notification_type}"

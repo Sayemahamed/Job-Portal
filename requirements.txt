@@ -10,4 +10,6 @@ django-widget-tweaks
 psycopg[binary,pool]
 playwright
 redis
+firecrawl-py
 celery
+html-to-markdown
