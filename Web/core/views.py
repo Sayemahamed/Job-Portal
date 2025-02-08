@@ -7,7 +7,7 @@ from django.db import transaction
 from allauth.socialaccount.models import SocialAccount
 from allauth.socialaccount import providers
 from allauth.socialaccount.providers.base import ProviderException
-from Job_Portal.tasks import add
+from Job_Portal.tasks import get_job_description
 
 
 # Create your views here.
@@ -53,7 +53,7 @@ def profile(request):
                 )
         except ProviderException:
             continue
-    add.delay()
+    get_job_description.delay("4129403317")
     return render(
         request,
         "core/profile.html",
