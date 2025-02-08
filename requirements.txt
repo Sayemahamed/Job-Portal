@@ -13,3 +13,11 @@ redis
 firecrawl-py
 celery
 html-to-markdown
+langgraph
+langgraph-api
+langgraph-checkpoint
+langgraph-cli
+langgraph-sdk
+psycopg 
+psycopg-pool 
+langgraph-checkpoint-postgres
