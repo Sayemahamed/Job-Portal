@@ -5,7 +5,6 @@ from html_to_markdown import convert_to_markdown
 import re
 
 
-
 def get_job_description(job_id: str) -> str:
     with sync_playwright() as p:
         browser: Browser = p.chromium.connect_over_cdp(

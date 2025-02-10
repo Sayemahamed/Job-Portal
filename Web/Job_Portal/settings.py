@@ -51,7 +51,6 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "core",
     "Job",
-    "Resume",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -128,7 +127,7 @@ AUTHENTICATION_BACKENDS = [
 # ------------------------------------------------------------------------------
 CELERY_BROKER_URL = "redis://localhost:6379/0"
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-CELERY_TIMEZONE = "Australia/Tasmania"
+CELERY_TIMEZONE = "Asia/Dhaka"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
