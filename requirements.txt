@@ -16,3 +16,6 @@ psycopg[binary,pool]
 redis
 celery
 html-to-markdown
+pandas
+numpy
+
