@@ -8,6 +8,8 @@ langgraph-checkpoint
 langgraph-sdk
 langgraph-cli
 langgraph-checkpoint-postgres
+langchain-openai
+langchain-community
 
 firecrawl-py
 playwright
