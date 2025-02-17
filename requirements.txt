@@ -21,4 +21,4 @@ celery
 html-to-markdown
 pandas
 numpy
-
+sqlmodel

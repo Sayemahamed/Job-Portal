@@ -1,25 +1,25 @@
 from langchain_openai import ChatOpenAI
 from state import AgentResponse
-from langchain_core.messages import HumanMessage, AIMessage, AnyMessage,FunctionMessage
+from langchain_core.messages import HumanMessage, AIMessage, AnyMessage, FunctionMessage
 import json
 from rich import print
 from firecrawl import FirecrawlApp
-from sqlmodel import SQLModel,Session,select,Field,create_engine,distinct
+from sqlmodel import SQLModel, Session, select, Field, create_engine, distinct
 import psycopg
+
 conn = psycopg.connect(
-    host="localhost",
-    port=5432,
-    dbname="postgres",
-    user="postgres",
-    password="postgres"
+    host="localhost", port=5432, dbname="postgres", user="postgres", password="postgres"
 )
 
 # conn.close()
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
+
 def normal_invoke_llm(prompt: list[AnyMessage]) -> AIMessage:
     return AIMessage(content=llm.invoke(prompt).content)
+
+
 def invoke_llm(prompt: list[AnyMessage], count: int = 0) -> AgentResponse:
     if count > 2:
         raise Exception("Too many attempts to parse response")
@@ -44,14 +44,13 @@ def invoke_llm(prompt: list[AnyMessage], count: int = 0) -> AgentResponse:
             count=count + 1,
         )
 
+
 def execute_sql(sql) -> AIMessage:
-    response=[]
+    response = []
     with conn.cursor() as cur:
         for row in cur.execute(sql):
             response.append(row)
         return AIMessage(content=str(response))
-
-
 
 
 class Job(SQLModel, table=True):
@@ -62,19 +61,18 @@ class Job(SQLModel, table=True):
     job_skills: str = Field(default=None)
     job_location: str = Field(default=None)
 
-engine = create_engine(
-    "postgresql+psycopg://postgres:postgres@localhost:5432/postgres"
-)
+
+engine = create_engine("postgresql+psycopg://postgres:postgres@localhost:5432/postgres")
 
 SQLModel.metadata.create_all(engine)
 
 with Session(engine) as session:
     statement = select(distinct(Job.job_title)).order_by(Job.job_title)
     results = session.exec(statement)
-    count=0
+    count = 0
     for job_title in results:
         # print(job_title)
-        count=count+1
+        count = count + 1
     print(count)
 
 # app = FirecrawlApp()
@@ -85,5 +83,8 @@ with Session(engine) as session:
 
 if __name__ == "__main__":
     print(execute_sql("SELECT * FROM job LIMIT 10"))
-    print(execute_sql("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'job'"))
-
+    print(
+        execute_sql(
+            "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'job'"
+        )
+    )

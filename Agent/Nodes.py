@@ -3,10 +3,11 @@ from langgraph.types import Command, interrupt
 from typing import Literal
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from rich import print
-from utils import invoke_llm,normal_invoke_llm,execute_sql
+from tools import get_related_jobs
+from utils import invoke_llm, normal_invoke_llm, execute_sql
 from state import AgentResponse
 
-execute_sql("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'job'")
+
 def User(state: State) -> Command[Literal["Coach"]]:
     print("---User_interface---")
     user_action = interrupt(value=state["messages"][-1].content)
@@ -44,15 +45,24 @@ def Critic_agent(state: State) -> Command[Literal["Coach"]]:
     print("---Critic_agent---")
     return Command(
         update={
-            "messages": [normal_invoke_llm([SystemMessage(content="")] + state["messages"])],
+            "messages": [
+                normal_invoke_llm([SystemMessage(content="")] + state["messages"])
+            ],
             "criticizes": state["criticizes"] + 1,
         },
         goto="Coach",
     )
 
+
 def Job(state: State) -> Command[Literal["Coach"]]:
     print("---Job---")
-    pass
+    job_title = state["messages"][-1].content
+    return Command(
+        update={
+            "messages": [AIMessage(content=get_related_jobs(job_title))],  # type: ignore
+        },
+        goto="Coach",
+    )
 
 
 def Industry(state: State) -> Command[Literal["Coach"]]:
