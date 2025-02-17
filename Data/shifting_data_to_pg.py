@@ -18,3 +18,4 @@ sqlite_conn.close()
 df.to_sql("Job", engine, if_exists="replace", index=False)
 
 print("Data migration from SQLite to PostgreSQL completed successfully!")
+
