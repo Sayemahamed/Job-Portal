@@ -5,7 +5,7 @@ from langgraph.graph.message import MessagesState
 
 class AgentResponse(BaseModel):
     Message: str
-    Next: Literal["User", "Job", "Critic", "Industry", "END", "Coach"]
+    Next: Literal["User", "Job", "Critic", "Industry", "END"]
 
 
 class State(MessagesState):

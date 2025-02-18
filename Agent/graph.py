@@ -26,7 +26,7 @@ builder.add_edge(START, "Coach")
 
 graph = builder.compile(checkpointer=checkpointer, store=store)
 
-config = RunnableConfig(configurable={"thread_id": "thread_id", "user_id": "user_id"})
+# config = RunnableConfig(configurable={"thread_id": "thread_id", "user_id": "user_id"})
 
 
 # initial_input = {"user_query": "Find me a job in AI research."}
