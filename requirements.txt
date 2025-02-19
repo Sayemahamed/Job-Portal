@@ -15,7 +15,10 @@ firecrawl-py
 playwright
 # tavily-search
 
-psycopg[binary,pool]
+psycopg[binary,pool,async]
+sqlalchemy[asyncio]
+fastapi[standard]
+asyncpg
 redis
 celery
 html-to-markdown
