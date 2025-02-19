@@ -15,8 +15,6 @@ firecrawl-py
 playwright
 # tavily-search
 
-psycopg[binary,pool,async]
-sqlalchemy[asyncio]
 fastapi[standard]
 asyncpg
 redis
