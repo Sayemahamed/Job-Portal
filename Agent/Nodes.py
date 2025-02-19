@@ -60,13 +60,8 @@ You are a **Career & Industry Coach** working within a multi-agent system that i
     {{"Message": "Please critique my career strategy.", "Next": "Critic"}},
     {{"Message": "Can you ask the user to clarify their goals further?", "Next": "User"}},
     {{"Message": "Finalized report.", "Next": "END"}}
-
-**Important Note:**  
-When referencing the available agents and tools, use the exact names as provided. Do not include any extra formatting, explanations, or commentary. Your output must strictly adhere to the JSON schema defined by `{AgentResponse.model_json_schema()}`.
+    **Note:** When calling **Job** and **Industry**, ensure your output is concise and contains fewer than 10 words.
 """
-
-
-from state import AgentResponse
 
 critic_prompt: str = f"""
 ## Role: Critic in the Career & Industry Coaching System
@@ -85,8 +80,9 @@ You are a **Critic** within a multi-agent system that includes a **Career Coach*
 def User(state: State) -> Command[Literal["Coach"]]:
     print("---User_interface---")
     user_action = interrupt(value=state["messages"][-1].content)
+    print(user_action)
     return Command(
-        update={"messages": [HumanMessage(content=user_action)]}, goto="Coach"
+        update={"messages": [HumanMessage(content=user_action["m"])]}, goto="Coach"
     )
 
 
@@ -95,7 +91,15 @@ def Coach_agent(
 ) -> Command[Literal["User", "Job", "Critic", "Industry", "__end__"]]:
     state["criticizes"]=state.get("criticizes",0)
     print("---Coach_agent---")
-    if state["criticizes"] < 2:
+    if len(state["messages"]) >3 and state["criticizes"]==0:
+        return Command(
+            update={
+                "messages": [AIMessage(content="Please critique my career strategy.")],
+            }
+            , goto="Critic"
+        )
+
+    if state["criticizes"] < 3:
         response: AgentResponse = invoke_llm(
             [SystemMessage(content=coach_prompt)] + state["messages"]
         )
@@ -110,9 +114,8 @@ def Coach_agent(
                 )
             ]
         )
-    count = 1 if response.Next == "Critic" else 0
     return Command(
-        update={"messages": [AIMessage(content=response.Message)],"criticizes":state["criticizes"]+count},
+        update={"messages": [AIMessage(content=response.Message)]},
         goto=response.Next if response.Next != "END" else "__end__",
     )
 
@@ -133,9 +136,11 @@ def Critic_agent(state: State) -> Command[Literal["Coach"]]:
 def Job(state: State) -> Command[Literal["Coach"]]:
     print("---Job---")
     job_title = state["messages"][-1].content
+    if len(job_title) > 50:
+        return Command(update={"messages": [AIMessage(content="Job title too long")]}, goto="Coach")
     return Command(
         update={
-            "messages": [AIMessage(content=get_related_jobs(job_title))],  # type: ignore
+            "messages": [AIMessage(content=str(get_related_jobs(job_title)))],  # type: ignore
         },
         goto="Coach",
     )
@@ -144,9 +149,11 @@ def Job(state: State) -> Command[Literal["Coach"]]:
 def Industry(state: State) -> Command[Literal["Coach"]]:
     print("---Industry---")
     industry = state["messages"][-1].content
+    if len(industry) > 50:
+        return Command(update={"messages": [AIMessage(content="Job title too long")]}, goto="Coach")
     return Command(
         update={
-            "messages": [AIMessage(content=get_industry_insights(industry))],  # type: ignore
+            "messages": [AIMessage(content=str(get_industry_insights(industry)))],  # type: ignore
         },
         goto="Coach",
     )

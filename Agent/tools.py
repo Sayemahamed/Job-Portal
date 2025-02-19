@@ -7,7 +7,6 @@ import os
 from urllib.parse import urlparse
 import tempfile
 
-tavily = TavilyClient()
 engine = create_engine("postgresql+psycopg://postgres:postgres@localhost:5432/postgres")
 
 SQLModel.metadata.create_all(engine)
@@ -28,7 +27,7 @@ def get_related_jobs(query: str):
             SELECT job_link, job_title, company, job_summary, job_skills, job_location
             FROM job_name 
             ORDER BY embedding <=> ai.ollama_embed('all-minilm', %s)
-            LIMIT 10;
+            LIMIT 5;
         """,
             (query,),
         )
@@ -40,7 +39,7 @@ def get_related_jobs(query: str):
                     # "job_link": row[0],
                     "job_title": row[1],
                     # "company": row[2],
-                    "job_summary": row[3],
+                    "job_summary": row[3][100:],
                     # "job_skills": row[4],
                     # "job_location": row[5]
                 }
@@ -57,6 +56,7 @@ class Information(SQLModel, table=True):
 
 
 def get_industry_insights(query: str):
+    tavily = TavilyClient()
     search_results = tavily.search(
         query=f"{query} (filetype:pdf OR filetype:doc OR filetype:md OR filetype:docx OR filetype:pptx OR filetype:csv) (site:.edu OR site:.org OR site:.net OR site:.biz)",
         search_depth="advanced",
@@ -112,19 +112,60 @@ def get_industry_insights(query: str):
                                 info_title=item["title"],
                                 content=conv_text
                             )
-                            ans.append({ "info_title": item["title"], "content": conv_text[500:]})
+                            ans.append({ "info_title": item["title"], "content": conv_text[300:]})
                             session.add(new_info)
                         else:
                             print(f"Failed to download file from {item['url']}. Status code: {response.status_code}")
                     except Exception as e:
                         print(f"Error processing {item['url']}: {e}")
                 else:
-                    ans.append({ "info_title": item["title"], "content": existing.content[500:]})
+                    ans.append({ "info_title": item["title"], "content": existing.content[300:]})
             # Commit all changes to the database
             session.commit()
     return ans
 
 # Example usage:
+
+
+
+
+
+def get_jobs(query: str):
+    conn = psycopg.connect(
+        host="localhost",
+        port=5432,
+        dbname="postgres",
+        user="postgres",
+        password="postgres",
+    )
+    with conn.cursor() as cur:
+        # Use parameterized query to prevent SQL injection
+        cur.execute(
+            """
+            SELECT job_link, job_title, company, job_summary, job_skills, job_location
+            FROM job_embeddings 
+            ORDER BY embedding <=> ai.ollama_embed('all-minilm', %s)
+            LIMIT 10;
+        """,
+            (query,),
+        )
+
+        results = []
+        for row in cur.fetchall():
+            results.append(
+                {
+                    "job_link": row[0],
+                    "job_title": row[1],
+                    # "company": row[2],
+                    # "job_summary": row[3][100:],
+                    # "job_skills": row[4],
+                    # "job_location": row[5]
+                }
+            )
+
+        return results
+
+
 
 if __name__ == "__main__":
     related_jobs = get_related_jobs("gen")
@@ -133,4 +174,6 @@ if __name__ == "__main__":
     temp=get_industry_insights("Nursing")
 
     print(temp)
-    
+
+    jobs = get_jobs("gen")
+
